@@ -1,8 +1,6 @@
 
 import pytest
 import allure
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.common.exceptions import TimeoutException
 from pages.main_page import MainPage
 from pages.personal_account_page import PersonalAccountPage
 from urls import Urls
@@ -46,19 +44,24 @@ class TestMainFunctionality:
 
     @allure.title("При добавлении ингредиента в заказ, увеличивается количество данного ингредиента")
     def test_counter_ingredient(self, driver):
-        main = MainPage(driver)
-        main.wait_bun()
-        main.drag_and_drop_ingredient_to_burger_area()
+        main_page = MainPage(driver)
+        main_page.wait_bun()
+        main_page.drag_and_drop_ingredient_to_burger_area()
         
-        assert main.get_count_ingredients() == '2'
+        assert main_page.get_count_ingredients() == '2'
 
 
     @allure.title("Залогиненный пользователь может оформить заказ")
     def test_authorized_user_order(self, driver, create_user):
-        main = MainPage(driver)
-        main.login_to_account(create_user)
-        main.wait_bun()
-        main.drag_and_drop_ingredient_to_burger_area()
-        main.click_order()
-        
-        assert main.check_order()
+        user_data, _, _ = create_user
+        email = user_data["email"]
+        password = user_data["password"]
+        main_page = MainPage(driver)
+        personal_account_page = PersonalAccountPage(driver)
+        personal_account_page.click_login_account_button()
+        personal_account_page.login(email, password)
+        main_page.wait_bun()
+        main_page.drag_and_drop_ingredient_to_burger_area()
+        main_page.click_order()
+
+        assert main_page.check_order()

@@ -16,8 +16,8 @@ class BasePage:
         self.timeout = 10
 
     @allure.step("Поиск элемента с ожиданием")
-    def find_element(self, locator):
-        return WebDriverWait(self.driver, 10).until(
+    def find_element(self, locator, timeout=10):
+        return WebDriverWait(self.driver, timeout).until(
             EC.presence_of_element_located(locator)
         )
     
@@ -39,11 +39,13 @@ class BasePage:
             EC.invisibility_of_element_located(locator)
         )
     
+    @allure.step("Ожидание выполнения условия")
+    def wait_until(self, condition, timeout=10):
+        WebDriverWait(self.driver, timeout).until(condition)
+    
     @allure.step("Клик по элементу")
-    def click_element(self, locator):
-        element = WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable(locator)
-        )
+    def click_element(self, locator, timeout=10):
+        element = self.wait_clickable_element(locator, timeout)
         try:
             element.click()
         except ElementClickInterceptedException:
@@ -124,4 +126,27 @@ class BasePage:
     @allure.step("Открытие страницы")
     def open_page(self, url):
         self.driver.get(url)
+
+    @allure.step("Скролл к элементу")
+    def scroll_to_element(self, locator):
+        element = self.find_element(locator)
+        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", element)
+
+    @allure.step("Ожидание, что URL содержит подстроку")
+    def wait_url_contains(self, url_part: str, timeout: int = 15):
+        WebDriverWait(self.driver, timeout).until(
+            EC.url_contains(url_part)
+        )
+
+    @allure.step("Ожидание, что URL не равен указанному")
+    def wait_url_not_equal(self, url: str, timeout: int = 15):
+        WebDriverWait(self.driver, timeout).until(
+            lambda d: d.current_url != url
+        )
+
+    @allure.step("Ожидание, что URL не содержит подстроку")
+    def wait_url_not_contains(self, url_part: str, timeout: int = 15):
+        WebDriverWait(self.driver, timeout).until(
+            lambda d: url_part not in d.current_url
+        )
         

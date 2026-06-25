@@ -1,6 +1,7 @@
 
 import pytest
 from pages.order_page import OrderPage
+from pages.personal_account_page import PersonalAccountPage
 import allure
 
 
@@ -17,9 +18,15 @@ class TestOrderPage:
 
     @allure.title('Заказы пользователя из раздела История заказов отображаются на странице Лента заказов')
     def test_feed_order_history_order(self, driver, create_user):
-        order_page = OrderPage(driver)
+        user_data, _, _ = create_user
+        email = user_data["email"]
+        password = user_data["password"]
         
-        order_page.login_to_account(create_user)
+        order_page = OrderPage(driver)
+        personal_account_page = PersonalAccountPage(driver)
+        
+        personal_account_page.click_login_account_button()
+        personal_account_page.login(email, password)
         order_page.wait_bun()
         order_page.drag_and_drop_ingredient_to_burger_area()
         order_page.click_create_order()
@@ -37,8 +44,15 @@ class TestOrderPage:
 
     @allure.title('При создании нового заказа счётчик Выполнено за всё время увеличивается')
     def test_feed_order_total_counter(self, driver, create_user):
+        user_data, _, _ = create_user
+        email = user_data["email"]
+        password = user_data["password"]
+        
         order_page = OrderPage(driver)
-        order_page.login_to_account(create_user)
+        personal_account_page = PersonalAccountPage(driver)
+        
+        personal_account_page.click_login_account_button()
+        personal_account_page.login(email, password)
         order_page.click_button_order_feed()
         order_all_time = int(order_page.text_order_all_time())
         order_page.click_constructor()
@@ -56,8 +70,16 @@ class TestOrderPage:
 
     @allure.title('При создании нового заказа счётчик Выполнено за сегодня увеличивается')
     def test_feed_order_today_counter(self, driver, create_user):
+        user_data, _, _ = create_user
+        email = user_data["email"]
+        password = user_data["password"]
+        
         order_page = OrderPage(driver)
-        order_page.login_to_account(create_user)
+        personal_account_page = PersonalAccountPage(driver)
+        
+        personal_account_page.click_login_account_button()
+        personal_account_page.login(email, password)
+
         order_page.click_button_order_feed()
         order_today = int(order_page.text_order_today())
         order_page.click_constructor()
@@ -76,8 +98,16 @@ class TestOrderPage:
 
     @allure.title('После оформления заказа его номер появляется в разделе В работе')
     def test_order_number_appears_in_work_section(self, driver, create_user):
+        user_data, _, _ = create_user
+        email = user_data["email"]
+        password = user_data["password"]
+        
         order_page = OrderPage(driver)
-        order_page.login_to_account(create_user)
+        personal_account_page = PersonalAccountPage(driver)
+        
+        personal_account_page.click_login_account_button()
+        personal_account_page.login(email, password)
+        
         order_page.click_constructor()
         order_page.wait_bun()
         order_page.drag_and_drop_ingredient_to_burger_area()

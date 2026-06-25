@@ -23,24 +23,15 @@ class ForgotPasswordPage(BasePage):
     @allure.step("Клик по кнопке 'Восстановить'")
     def click_restore_button(self):
         self.click_element(ForgotPasswordLocators.BUTTON_RESTORE)
-
-        WebDriverWait(self.driver, 10).until(
-            EC.invisibility_of_element_located(ForgotPasswordLocators.BUTTON_RESTORE)
-        )
+        self.wait_until_element_invisible(ForgotPasswordLocators.BUTTON_RESTORE)
     
     @allure.step("Клик по иконке показать/скрыть пароль")
     def click_password_icon(self):
-
         try:
-            WebDriverWait(self.driver, 5).until(
-                EC.invisibility_of_element_located(ForgotPasswordLocators.MODAL_OVERLAY)
-            )
-        except:
+            self.wait_until_element_invisible(ForgotPasswordLocators.MODAL_OVERLAY)
+        except Exception:
             pass  
-        
-        WebDriverWait(self.driver, 10).until(
-            EC.element_to_be_clickable(ForgotPasswordLocators.ICON_ACTION_PASSWORD)
-        )
+        self.wait_clickable_element(ForgotPasswordLocators.ICON_ACTION_PASSWORD)
         self.click_element(ForgotPasswordLocators.ICON_ACTION_PASSWORD)
     
     @allure.step("Ввод нового пароля")
@@ -61,4 +52,16 @@ class ForgotPasswordPage(BasePage):
     def is_email_field_displayed(self):
         element = self.find_element(ForgotPasswordLocators.INPUT_EMAIL)
         return element.is_displayed()
+    
+    @allure.step("Проверка успешного восстановления пароля")
+    def is_restore_successful(self) -> bool:
+        try:
+            email_displayed = self.displaying_element(ForgotPasswordLocators.INPUT_EMAIL)
+            if email_displayed:
+                return True
+            
+            save_displayed = self.displaying_element(ForgotPasswordLocators.BUTTON_SAVE)
+            return save_displayed
+        except Exception:
+            return False
     

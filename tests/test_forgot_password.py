@@ -28,8 +28,7 @@ class TestForgotPassword:
         forgot_page.enter_email(email)
         forgot_page.click_restore_button()
         
-        assert forgot_page.is_email_field_displayed() or \
-               driver.find_element(ForgotPasswordLocators.BUTTON_SAVE).is_displayed()
+        assert forgot_page.is_restore_successful()
     
 
     @allure.title("Клик по кнопке показать/скрыть пароль делает поле активным")

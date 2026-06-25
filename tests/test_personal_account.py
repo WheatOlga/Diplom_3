@@ -21,7 +21,7 @@ class TestPersonalAccount:
         personal_account_page.login(email, password)
         
         personal_account_page.click_login_account_button()
-        WebDriverWait(driver, 15).until(EC.url_contains(Urls.CONTAINS_ACCOUNT))
+        personal_account_page.wait_url_contains(Urls.CONTAINS_ACCOUNT)
         current_url = personal_account_page.get_url()
 
         assert Urls.CONTAINS_ACCOUNT in current_url
@@ -39,7 +39,7 @@ class TestPersonalAccount:
         personal_account_page.login(email, password)
         personal_account_page.click_login_account_button()
         personal_account_page.click_order_history_link()
-        WebDriverWait(driver, 15).until(EC.url_contains(Urls.CONTAINS_ORDER_HISTORY))
+        personal_account_page.wait_url_contains(Urls.CONTAINS_ORDER_HISTORY)
         
         assert personal_account_page.get_url() == Urls.ORDER_HISTORY_URL
     

@@ -30,11 +30,12 @@ class OrderPageLocators:
 
     ORDER_FEED = (By.XPATH, '(//a[contains(@class, "OrderHistory_link")])[1]')
     ORDER_NUMBER_FEED = (By.XPATH, '(//a[contains(@class, "OrderHistory_link")]//p[contains(@class, "text_type_digits-default")])[1]')
-    ORDER_NUMBER_IN_FEED_TEMPLATE = "//p[contains(@class, 'text_type_digits-default') and text()='{order_number}']"
-    ORDER_NUMBER_IN_WORK_TEMPLATE = "//li[@class='text text_type_digits-default mb-2' and contains(text(), '{order_number}')]"
+    
+    ORDER_BY_NUMBER_TEMPLATE = (By.XPATH, '//a[contains(@class, "OrderHistory_link")]//p[contains(text(), "#{order_number}")]/ancestor::a')
+    ORDER_NUMBER_IN_FEED_TEMPLATE = (By.XPATH, "//p[contains(@class, 'text_type_digits-default') and text()='{order_number}']")
+    ORDER_NUMBER_IN_WORK_TEMPLATE = (By.XPATH, '(//p[contains(@class, "OrderFeed_number")])[1]')
 
     ORDER_ALL_TIME = (By.XPATH, "//p[text()='Выполнено за все время:']/following-sibling::p[contains(@class, 'OrderFeed_number')]")
     ORDER_TODAY = (By.XPATH, "//p[text()='Выполнено за сегодня:']/following-sibling::p[contains(@class, 'OrderFeed_number')]")
 
     ORDER_NUMBER_WORK = (By.XPATH, '//p[contains(text(), "В работе:")]/following-sibling::*//p[contains(@class, "text_type_digits")]')
-    ORDER_NUMBER_IN_WORK_TEMPLATE = "//li[@class='text text_type_digits-default mb-2']"

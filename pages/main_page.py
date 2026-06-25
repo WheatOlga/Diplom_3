@@ -23,9 +23,7 @@ class MainPage(BasePage):
 
     @allure.step("Ожидание загрузки булки")
     def wait_bun(self):
-        WebDriverWait(self.driver, 15).until(
-            EC.presence_of_element_located(MainPageLocators.BUN)
-        )
+        self.find_element(MainPageLocators.BUN)
 
     @allure.step("Клик по булке")
     def click_bun(self):
@@ -43,9 +41,7 @@ class MainPage(BasePage):
     @allure.step("Закрытие модального окна ингредиента")
     def close_ingredient_modal(self):
         self.click_element(MainPageLocators.MODAL_CLOSE_BUTTON)
-        WebDriverWait(self.driver, 5).until(
-            EC.invisibility_of_element_located(MainPageLocators.MODAL_INGREDIENT)
-        )
+        self.wait_until_element_invisible(MainPageLocators.MODAL_INGREDIENT)
 
     @allure.step("Перетаскивание ингредиента в зону бургера")
     def drag_and_drop_ingredient_to_burger_area(self):
@@ -68,9 +64,7 @@ class MainPage(BasePage):
     @allure.step("Проверка успешного оформления заказа")
     def check_order(self):
         try:
-            WebDriverWait(self.driver, 10).until(
-                EC.visibility_of_element_located(MainPageLocators.MODAL_ORDER_SUCCESS)
-            )
+            self.wait_visibility_element(MainPageLocators.MODAL_ORDER_SUCCESS)
             return True
         except:
             return False
@@ -89,20 +83,6 @@ class MainPage(BasePage):
 
         try:
             self.click_element(MainPageLocators.MODAL_CLOSE_BUTTON)
-            WebDriverWait(self.driver, 5).until(
-                EC.invisibility_of_element_located(MainPageLocators.MODAL_ORDER_SUCCESS)
-            )
+            self.wait_until_element_invisible(MainPageLocators.MODAL_ORDER_SUCCESS)
         except:
             pass
-
-    @allure.step("Вход в аккаунт")
-    def login_to_account(self, create_user):
-        from pages.personal_account_page import PersonalAccountPage
-        personal_account_page = PersonalAccountPage(self.driver)
-
-        user_data, response_data, status_code = create_user
-        email = user_data["email"]
-        password = user_data["password"]
-
-        personal_account_page.click_login_account_button()
-        personal_account_page.login(email, password)
